@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eliza Carthy – The Interview & The Conversation</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontsource-inter@5.0.19/index.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f2f5;
+    color: #1a1a2e;
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
+  header p { opacity: 0.85; font-size: 0.95rem; }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    background: #fff;
+    border-bottom: 3px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 0.9rem 0.5rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+  }
+  .tab-btn:hover { color: #0f3460; background: #f8f9fa; }
+  .tab-btn.active {
+    color: #0f3460;
+    border-bottom-color: #e94560;
+    background: #f0f4ff;
+  }
+
+  .tab-content { display: none; padding: 1.5rem; max-width: 960px; margin: 0 auto; }
+  .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-title .icon {
+    width: 36px; height: 36px;
+    background: #e94560;
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-left: 4px solid #e94560;
+  }
+  .card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: #1a1a2e;
+  }
+  .card p, .card li { font-size: 0.95rem; color: #444; }
+  .accent-card {
+    border-left-color: #f39c12;
+  }
+
+  .bio-box {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .bio-box strong { color: #1a1a2e; }
+
+  .video-container {
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 1rem 0;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .video-placeholder {
+    color: #aaa;
+    text-align: center;
+    padding: 2rem;
+  }
+  .video-placeholder .play-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .question-block {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #0f3460;
+  }
+  .question-block .q-label {
+    font-weight: 700;
+    color: #0f3460;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  .question-block ol, .question-block ul {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+  }
+  .question-block li {
+    margin: 0.4rem 0;
+    font-size: 0.93rem;
+  }
+
+  .fill-blank {
+    display: inline-block;
+    border: none;
+    border-bottom: 2px solid #0f3460;
+    background: transparent;
+    font-size: 0.93rem;
+    padding: 0.1rem 0.3rem;
+    min-width: 100px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.3s;
+  }
+  .fill-blank:focus { border-bottom-color: #e94560; }
+  .fill-blank.correct { border-bottom-color: #27ae60; background: #e8f8f0; }
+  .fill-blank.incorrect { border-bottom-color: #e74c3c; background: #fdecea; }
+
+  .tf-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  .tf-row:last-child { border-bottom: none; }
+  .tf-row .tf-text { flex: 1; font-size: 0.93rem; }
+  .tf-row .tf-buttons { display: flex; gap: 0.4rem; flex-shrink: 0; }
+  .tf-btn {
+    padding: 0.3rem 0.8rem;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .tf-btn:hover { border-color: #0f3460; }
+  .tf-btn.selected-t { background: #27ae60; color: white; border-color: #27ae60; }
+  .tf-btn.selected-f { background: #e74c3c; color: white; border-color: #e74c3c; }
+  .tf-btn.correct-answer { border-color: #27ae60; background: #e8f8f0; }
+  .tf-btn.wrong-answer { border-color: #e74c3c; background: #fdecea; }
+
+  .correction-input {
+    width: 100%;
+    margin-top: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    display: none;
+  }
+  .correction-input.visible { display: block; }
+
+  .checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  .checkbox-row:last-child { border-bottom: none; }
+  .checkbox-row input[type="checkbox"] {
+    width: 18px; height: 18px;
+    margin-top: 3px;
+    accent-color: #0f3460;
+    flex-shrink: 0;
+  }
+  .checkbox-row label { font-size: 0.93rem; flex: 1; }
+  .checkbox-row .who-select {
+    display: flex;
+    gap: 0.4rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .who-btn {
+    padding: 0.25rem 0.6rem;
+    border: 1.5px solid #ddd;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .who-btn:hover { border-color: #0f3460; }
+  .who-btn.selected { background: #0f3460; color: white; border-color: #0f3460; }
+
+  .check-btn {
+    background: linear-gradient(135deg, #0f3460, #1a1a2e);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(15,52,96,0.3);
+  }
+  .check-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,52,96,0.4); }
+  .check-btn:active { transform: translateY(0); }
+
+  .result-msg {
+    margin-top: 0.8rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: none;
+  }
+  .result-msg.show { display: block; animation: fadeIn 0.3s; }
+  .result-msg.success { background: #e8f8f0; color: #27ae60; border: 1px solid #27ae60; }
+  .result-msg.partial { background: #fff8e1; color: #f39c12; border: 1px solid #f39c12; }
+  .result-msg.fail { background: #fdecea; color: #e74c3c; border: 1px solid #e74c3c; }
+
+  .glossary {
+    background: #f0f7ff;
+    border: 1px solid #b8d4f0;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+  }
+  .glossary h4 {
+    color: #0f3460;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .glossary p { font-size: 0.88rem; margin: 0.3rem 0; color: #444; }
+  .glossary strong { color: #1a1a2e; }
+
+  .conversation-box {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+  }
+  .conv-line {
+    margin: 0.6rem 0;
+    font-size: 0.93rem;
+    line-height: 1.6;
+  }
+  .conv-line .speaker {
+    font-weight: 700;
+    color: #0f3460;
+    margin-right: 0.3rem;
+  }
+
+  .discussion-box {
+    background: #fff8f0;
+    border: 1px solid #f0d9b5;
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin: 1rem 0;
+  }
+  .discussion-box textarea {
+    width: 100%;
+    min-height: 80px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0.6rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    margin-top: 0.5rem;
+  }
+  .discussion-box textarea:focus { outline: none; border-color: #0f3460; }
+
+  .sub-heading {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 1.2rem 0 0.6rem;
+    padding-left: 0.5rem;
+    border-left: 3px solid #e94560;
+  }
+
+  .photo-placeholder,
+  .family-photo,
+  .conversation-photo {
+    width: 100%;
+    max-width: 500px;
+    height: 220px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+    overflow: hidden;
+    background: #e9ecef;
+  }
+
+  .photo-placeholder {
+    max-width: 400px;
+    height: 200px;
+  }
+
+  .photo-placeholder img,
+  .family-photo img,
+  .conversation-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    .tab-btn { font-size: 0.78rem; padding: 0.7rem 0.3rem; min-width: 100px; }
+    .tab-content { padding: 1rem; }
+    .card { padding: 1rem; }
+    header h1 { font-size: 1.3rem; }
+    .tf-row { flex-direction: column; gap: 0.4rem; }
+    .checkbox-row { flex-direction: column; gap: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎵 Eliza Carthy – The Interview & The Conversation</h1>
+  <p>Interactive Exercises · English Learning</p>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Lesson sections">
+  <button class="tab-btn active" type="button" id="part1-tab" data-tab="part1" role="tab" aria-selected="true" aria-controls="part1">Part 1</button>
+  <button class="tab-btn" type="button" id="part2-tab" data-tab="part2" role="tab" aria-selected="false" aria-controls="part2">Part 2</button>
+  <button class="tab-btn" type="button" id="part3-tab" data-tab="part3" role="tab" aria-selected="false" aria-controls="part3">Part 3</button>
+  <button class="tab-btn" type="button" id="language-tab" data-tab="language" role="tab" aria-selected="false" aria-controls="language">Language</button>
+  <button class="tab-btn" type="button" id="conversation-tab" data-tab="conversation" role="tab" aria-selected="false" aria-controls="conversation">Conversation</button>
+</nav>
+
+<!-- ==================== PART 1 ==================== -->
+<div id="part1" class="tab-content active">
+  <div class="section-title"><span class="icon">1</span> THE INTERVIEW – Part 1</div>
+
+  <div class="card">
+    <h3>a) Read the biographical information about Eliza Carthy.</h3>
+    <p>Have you ever heard any English, Scottish, or Irish folk music?</p>
+
+    <div class="bio-box">
+      <strong>Eliza Carthy</strong> is an English folk musician known both for singing and playing the violin. She is the daughter of singer/guitarist <strong>Martin Carthy</strong> and singer <strong>Norma Waterson</strong>, who are also English folk musicians. In addition to her solo work, she has played and sung with several groups, including as lead vocalist with <em>Blue Murder</em>. She has been nominated twice for the Mercury Music Prize for UK album of the year, has won eight BBC Folk Awards, and has also been given an MBE for services to folk music. When she released an album of collaborations with her mother, entitled <em>Gift</em>, a BBC reviewer wrote: 'The gift in question here…is a handling of talent from generation to generation.'
+    </div>
+
+    <div class="photo-placeholder">
+      <img src="Images/01_eliza.png" alt="Eliza Carthy" loading="lazy">
+    </div>
+    <div class="family-photo">
+      <img src="Images/02_eliza.png" alt="Eliza Carthy with Martin Carthy and Norma Waterson" loading="lazy">
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>b) Watch Part 1 of the interview.</h3>
+    <p>What is Eliza's overwhelming memory of her childhood?</p>
+
+    <div class="video-container">
+      <video controls>
+        <source src="videos/01_Eliza_Carthy_part1.mp4" type="video/mp4">
+        <div class="video-placeholder">
+          <div class="play-icon">▶</div>
+          <div>Video: Part 1 – Eliza Carthy Interview</div>
+          <div style="font-size:0.8rem;margin-top:0.3rem;">File: ../videos/part1.mp4</div>
+        </div>
+      </video>
+    </div>
+
+    <div class="discussion-box">
+      <p><strong>Your answer:</strong></p>
+      <textarea placeholder="Write Eliza's overwhelming memory of her childhood here..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>c) Now watch again. What does Eliza say about…?</h3>
+
+    <div class="question-block">
+      <ol>
+        <li>her father in the 50s and 60s</li>
+        <li>The Watersons</li>
+        <li>her mother's grandmother</li>
+        <li>her mother's uncle and father</li>
+        <li><em>The Spinning Wheel</em></li>
+        <li>the farm where she was brought up</li>
+        <li>her parents' friends</li>
+      </ol>
+    </div>
+
+    <div class="discussion-box">
+      <p><strong>1. Her father in the 50s and 60s:</strong></p>
+      <textarea placeholder="What does Eliza say about her father in the 50s and 60s?"></textarea>
+      <p style="margin-top:0.8rem;"><strong>2. The Watersons:</strong></p>
+      <textarea placeholder="What does Eliza say about The Watersons?"></textarea>
+      <p style="margin-top:0.8rem;"><strong>3. Her mother's grandmother:</strong></p>
+      <textarea placeholder="What does Eliza say about her mother's grandmother?"></textarea>
+      <p style="margin-top:0.8rem;"><strong>4. Her mother's uncle and father:</strong></p>
+      <textarea placeholder="What does Eliza say about her mother's uncle and father?"></textarea>
+      <p style="margin-top:0.8rem;"><strong>5. The Spinning Wheel:</strong></p>
+      <textarea placeholder="What does Eliza say about The Spinning Wheel?"></textarea>
+      <p style="margin-top:0.8rem;"><strong>6. The farm where she was brought up:</strong></p>
+      <textarea placeholder="What does Eliza say about the farm?"></textarea>
+      <p style="margin-top:0.8rem;"><strong>7. Her parents' friends:</strong></p>
+      <textarea placeholder="What does Eliza say about her parents' friends?"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>d) Do you think Eliza's upbringing sounds like it was fun or quite hard? Why?</h3>
+    <div class="discussion-box">
+      <textarea placeholder="Share your thoughts about Eliza's upbringing..."></textarea>
+    </div>
+  </div>
+
+  <div class="glossary">
+    <h4>📖 Glossary</h4>
+    <p><strong>Bob Dylan</strong> (b.1941) an American singer-songwriter, who has influenced popular music and culture for more than five decades</p>
+    <p><strong>Paul Simon</strong> (b.1941) an American singer-songwriter, at one time half of the duo Simon and Garfunkel</p>
+    <p><strong>Hull</strong> /hʌl/ a city in Yorkshire, England</p>
+    <p><strong>travellers / gypsies</strong> people who traditionally travel around and live in caravans</p>
+    <p><strong>banjo</strong> a musical instrument like a guitar, with a long neck, a round body, and four or more strings</p>
+    <p><strong>The Spinning Wheel</strong> an Irish ballad written in the mid-1800s</p>
+  </div>
+</div>
+
+<!-- ==================== PART 2 ==================== -->
+<div id="part2" class="tab-content">
+  <div class="section-title"><span class="icon">▶</span> Part 2</div>
+
+  <div class="card">
+    <h3>a) Now watch Part 2.</h3>
+    <p>What do you think Eliza Carthy was like as a child? What do you find out about her as a mother?</p>
+
+    <div class="video-container">
+      <video controls>
+        <source src="videos/02_Eliza_Carthy_part2.mp4" type="video/mp4">
+        <div class="video-placeholder">
+          <div class="play-icon">▶</div>
+          <div>Video: Part 2 – Eliza Carthy Interview</div>
+          <div style="font-size:0.8rem;margin-top:0.3rem;">File: ../videos/part2.mp4</div>
+        </div>
+      </video>
+    </div>
+
+    <div class="discussion-box">
+      <p><strong>What was Eliza like as a child?</strong></p>
+      <textarea placeholder="Describe Eliza as a child..."></textarea>
+      <p style="margin-top:0.8rem;"><strong>What do you find out about her as a mother?</strong></p>
+      <textarea placeholder="What did you learn about Eliza as a mother?"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>b) Watch again and answer the questions.</h3>
+
+    <div class="discussion-box">
+      <p><strong>1. Did Eliza originally want to become a musician?</strong></p>
+      <textarea placeholder="Your answer..."></textarea>
+      <p style="margin-top:0.8rem;"><strong>2. Why did her mother retire?</strong></p>
+      <textarea placeholder="Your answer..."></textarea>
+      <p style="margin-top:0.8rem;"><strong>3. How old was she at her first public performance?</strong></p>
+      <textarea placeholder="Your answer..."></textarea>
+      <p style="margin-top:0.8rem;"><strong>4. How much did she sing during the concert?</strong></p>
+      <textarea placeholder="Your answer..."></textarea>
+      <p style="margin-top:0.8rem;"><strong>5. How has she reorganized her life because of having her own children?</strong></p>
+      <textarea placeholder="Your answer..."></textarea>
+      <p style="margin-top:0.8rem;"><strong>6. What does she feel she's lacking at the moment?</strong></p>
+      <textarea placeholder="Your answer..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>c) What do you think of Eliza's work-life balance?</h3>
+    <div class="discussion-box">
+      <textarea placeholder="Share your thoughts on Eliza's work-life balance..."></textarea>
+    </div>
+  </div>
+
+  <div class="glossary">
+    <h4>📖 Glossary</h4>
+    <p><strong>the Fylde</strong> /faɪld/ an area in western Lancashire, England</p>
+    <p><strong>Fleetwood</strong> a town in the Fylde</p>
+    <p><strong>the Marine Hall</strong> a venue in Fleetwood</p>
+  </div>
+</div>
+
+<!-- ==================== PART 3 ==================== -->
+<div id="part3" class="tab-content">
+  <div class="section-title"><span class="icon">▶</span> Part 3</div>
+
+  <div class="card">
+    <h3>a) Now watch Part 3.</h3>
+    <p>How has Eliza Carthy's family influenced her approach to music?</p>
+
+    <div class="video-container">
+      <video controls>
+        <source src="videos/03_Eliza_Carthy_part3.mp4" type="video/mp4">
+        <div class="video-placeholder">
+          <div class="play-icon">▶</div>
+          <div>Video: Part 3 – Eliza Carthy Interview</div>
+          <div style="font-size:0.8rem;margin-top:0.3rem;">File: ../videos/part3.mp4</div>
+        </div>
+      </video>
+    </div>
+
+    <div class="discussion-box">
+      <textarea placeholder="How has Eliza's family influenced her approach to music?"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>b) Watch again. Mark the sentences T (true) or F (false). Correct the F sentences.</h3>
+
+    <div id="tf-exercises">
+      <div class="tf-row" data-correct="T">
+        <div class="tf-text">1. Eliza thinks the reason she doesn't like working alone is because of being brought up surrounded by people.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
+          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+        </div>
+        <input type="text" class="correction-input" placeholder="Correct the sentence...">
+      </div>
+
+      <div class="tf-row" data-correct="F">
+        <div class="tf-text">2. At the moment she has a 30-piece band.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
+          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+        </div>
+        <input type="text" class="correction-input" placeholder="Correct the sentence...">
+      </div>
+
+      <div class="tf-row" data-correct="T">
+        <div class="tf-text">3. Her father understands that working with family members is different.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
+          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+        </div>
+        <input type="text" class="correction-input" placeholder="Correct the sentence...">
+      </div>
+
+      <div class="tf-row" data-correct="F">
+        <div class="tf-text">4. Her father was a blood relation in the group The Watersons.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
+          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+        </div>
+        <input type="text" class="correction-input" placeholder="Correct the sentence...">
+      </div>
+
+      <div class="tf-row" data-correct="T">
+        <div class="tf-text">5. Eliza's daughter Florence plays three musical instruments and also sings well.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
+          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+        </div>
+        <input type="text" class="correction-input" placeholder="Correct the sentence...">
+      </div>
+
+      <div class="tf-row" data-correct="T">
+        <div class="tf-text">6. She thinks there's a close link between foreign languages and singing.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
+          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+        </div>
+        <input type="text" class="correction-input" placeholder="Correct the sentence...">
+      </div>
+
+      <div class="tf-row" data-correct="F">
+        <div class="tf-text">7. Her younger daughter Isabella is not yet interested in music.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
+          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+        </div>
+        <input type="text" class="correction-input" placeholder="Correct the sentence...">
+      </div>
+
+      <div class="tf-row" data-correct="T">
+        <div class="tf-text">8. She would rather her children didn't become touring musicians.</div>
+        <div class="tf-buttons">
+          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
+          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+        </div>
+        <input type="text" class="correction-input" placeholder="Correct the sentence...">
+      </div>
+    </div>
+
+    <button class="check-btn" type="button" data-check="tf">Check Answers</button>
+    <div id="tf-result" class="result-msg"></div>
+  </div>
+
+  <div class="card">
+    <h3>c) Did you ever want to have the same job as your parents? Would you like to work with any members of your family? Why (not)?</h3>
+    <div class="discussion-box">
+      <textarea placeholder="Share your thoughts..."></textarea>
+    </div>
+  </div>
+
+  <div class="glossary">
+    <h4> Glossary</h4>
+    <p><strong>Twinkle, Twinkle</strong> a well-known children's song (Twinkle, twinkle, little star, How I wonder what you are…)</p>
+  </div>
+</div>
+
+<!-- ==================== LOOKING AT LANGUAGE ==================== -->
+<div id="language" class="tab-content">
+  <div class="section-title"><span class="icon">2</span> LOOKING AT LANGUAGE</div>
+
+  <div class="card accent-card">
+    <h3>🔍 Discourse markers</h3>
+    <p>Eliza Carthy uses several discourse markers when she speaks, that is, adverbs (e.g. <em>so, anyway</em>) or adverbial expressions (e.g. <em>in fact, after all</em>) which connect and organize language, and help you to follow what she is saying.</p>
+  </div>
+
+  <div class="card">
+    <h3>a) Watch some extracts from the interview and complete the gaps with one or two words.</h3>
+
+    <div class="video-container">
+      <video controls>
+        <source src="videos/04_Eliza_Carthy_mixed_comp_check.mp4" type="video/mp4">
+        <div class="video-placeholder">
+          <div class="play-icon">▶</div>
+          <div>Video: Mixed comprehension check</div>
+        </div>
+      </video>
+    </div>
+
+    <div class="question-block">
+      <p><strong>1.</strong> '…and they were also instrumental in the beginning of the 60s folk revival, the formation of the folk clubs, and the, the beginning of, <input type="text" class="fill-blank" data-answer="therefore" placeholder="_______">, the professional music scene that I work on now.'</p>
+    </div>
+
+    <div class="question-block">
+      <p><strong>2. Interviewer</strong> 'And were your parents both from musical families?'</p>
+      <p><strong>Eliza</strong> 'Um, <input type="text" class="fill-blank" data-answer="actually" placeholder="_______">, both sides of my family are musical…'</p>
+    </div>
+
+    <div class="question-block">
+      <p><strong>3.</strong> 'My mum retired in 1966–65/66 from professional touring to raise me. <input type="text" class="fill-blank" data-answer="After" placeholder="_______"> <input type="text" class="fill-blank" data-answer="all" placeholder="_______">, the road is a difficult place…'</p>
+    </div>
+
+    <div class="question-block">
+      <p><strong>4.</strong> 'But yes, <input type="text" class="fill-blank" data-answer="anyway" placeholder="_______"> I just – the first song they started up singing, tugged on his leg…'</p>
+    </div>
+
+    <div class="question-block">
+      <p><strong>5. Interviewer</strong> 'Has having children yourself changed your approach to your career?'</p>
+      <p><strong>Eliza</strong> 'Er, yes, <input type="text" class="fill-blank" data-answer="definitely" placeholder="_______"> a <input type="text" class="fill-blank" data-answer="lot" placeholder="_______">. Yes, <input type="text" class="fill-blank" data-answer="absolutely" placeholder="_______"> a <input type="text" class="fill-blank" data-answer="lot" placeholder="_______">, it has.'</p>
+    </div>
+
+    <div class="question-block">
+      <p><strong>6.</strong> '…The Watersons was a brother and two sisters, and he joined that, and <input type="text" class="fill-blank" data-answer="obviously" placeholder="_______"> <input type="text" class="fill-blank" data-answer="then" placeholder="_______"> he was married to my mum, but he wasn't related to her.'</p>
+    </div>
+
+    <div class="question-block">
+      <p><strong>7.</strong> 'And Isabella, my youngest as well, she's really, she's really showing interest in it and I love it when they do that. <input type="text" class="fill-blank" data-answer="I" placeholder="_______"> <input type="text" class="fill-blank" data-answer="mean" placeholder="_______"> whether or not I'd want them to be touring musicians…'</p>
+    </div>
+
+    <div class="question-block">
+      <p><strong>8.</strong> 'But, you know, I think the – I think the world is changing <input type="text" class="fill-blank" data-answer="though" placeholder="_______">, I don't know how many touring musicians there are going to be in the world in 20 years…'</p>
+    </div>
+
+    <button class="check-btn" type="button" data-check="fill">Check Answers</button>
+    <div id="fill-result" class="result-msg"></div>
+  </div>
+
+  <div class="card">
+    <h3>b) How do the discourse markers affect the meaning of what Eliza says in each extract?</h3>
+    <div class="discussion-box">
+      <textarea placeholder="Analyse how the discourse markers affect the meaning in each extract..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== THE CONVERSATION ==================== -->
+<div id="conversation" class="tab-content">
+  <div class="section-title"><span class="icon">3</span> THE CONVERSATION</div>
+
+  <div class="conversation-photo">
+    <img src="Images/03_eliza.png" alt="Duncan, Joanne and Alice in conversation" loading="lazy">
+  </div>
+
+  <div class="card">
+    <h3>a) Watch the conversation. Who…?</h3>
+
+    <div class="video-container">
+      <video controls>
+        <source src="videos/05_Conversation.mp4" type="video/mp4">
+        <div class="video-placeholder">
+          <div class="play-icon">▶</div>
+          <div>Video: Conversation</div>
+        </div>
+      </video>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="conv1a">
+      <label for="conv1a">1. worked for their family business</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="conv2a">
+      <label for="conv2a">2. knows someone who worked for their family business</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="conv3a">
+      <label for="conv3a">3. doesn't mention their own family</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>b) Watch again. Which of these advantages and disadvantages of working in a family business are mentioned, and by whom?</h3>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="adv1">
+      <label for="adv1">1. If your parents run a business, it can be very convenient to work for them.</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="adv2">
+      <label for="adv2">2. It can be a problem to take a break from work.</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="adv3">
+      <label for="adv3">3. If the business is successful, all the money stays in the family.</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="adv4">
+      <label for="adv4">4. It can be difficult to achieve a good work-life balance.</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="adv5">
+      <label for="adv5">5. Sometimes family members can be taken advantage of.</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="adv6">
+      <label for="adv6">6. It's impossible to maintain good relations with your family.</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="adv7">
+      <label for="adv7">7. It makes you understand how difficult it is to run a business.</label>
+      <div class="who-select">
+        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
+        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
+        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>c) Do you think that on the whole it's a positive thing to work for a family business?</h3>
+    <div class="discussion-box">
+      <textarea placeholder="Share your opinion..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>d) Watch an extract where Joanne talks at the same time as Alice. Complete what Joanne says. What is Joanne's intention?</h3>
+
+    <div class="video-container">
+      <video controls>
+        <source src="videos/06_Conversation_Extracts.mp4" type="video/mp4">
+        <div class="video-placeholder">
+          <div class="play-icon">▶</div>
+          <div>Video: Joanne and Alice extract</div>
+        </div>
+      </video>
+    </div>
+
+    <div class="conversation-box">
+      <div class="conv-line"><span class="speaker">Alice</span> …my parents would go off to work and I knew that was a place that they went off…</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> <input type="text" class="fill-blank" data-answer="yeah" placeholder="_______" style="min-width:150px;">.</div>
+      <div class="conv-line"><span class="speaker">Alice</span> …to make money…but I didn't see it, so I –</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> I think that's really <input type="text" class="fill-blank" data-answer="important" placeholder="_______" style="min-width:120px;">, to appreciate it. Yes, <input type="text" class="fill-blank" data-answer="exactly" placeholder="_______" style="min-width:100px;">.</div>
+      <div class="conv-line"><span class="speaker">Alice</span> It makes you appreciate it, it more and you see the hard work and the stresses…</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> <input type="text" class="fill-blank" data-answer="yeah" placeholder="_______" style="min-width:100px;">.</div>
+      <div class="conv-line"><span class="speaker">Alice</span> …of running a business.</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> So it could be an <input type="text" class="fill-blank" data-answer="advantage" placeholder="_______" style="min-width:130px;">…</div>
+      <div class="conv-line"><span class="speaker">Alice</span> Definitely.</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> …one <input type="text" class="fill-blank" data-answer="way" placeholder="_______" style="min-width:80px;">, rather than an exploitative situation.</div>
+    </div>
+
+    <button class="check-btn" type="button" data-check="conv">Check Answers</button>
+    <div id="conv-fill-result" class="result-msg"></div>
+
+    <div class="discussion-box" style="margin-top:1rem;">
+      <p><strong>What is Joanne's intention?</strong></p>
+      <textarea placeholder="What do you think Joanne is trying to do when she speaks at the same time as Alice?"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>e) Now have a conversation in groups of three. Discuss the statements.</h3>
+
+    <div class="discussion-box">
+      <p><strong>1. It's much easier for the children of successful parents to be successful themselves.</strong></p>
+      <textarea placeholder="Discuss this statement..."></textarea>
+      <p style="margin-top:0.8rem;"><strong>2. It's not possible to both have a successful career and be a successful parent.</strong></p>
+      <textarea placeholder="Discuss this statement..."></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+function showTab(id, button = null) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-selected', 'false');
+  });
+
+  document.getElementById(id).classList.add('active');
+  if (button) {
+    button.classList.add('active');
+    button.setAttribute('aria-selected', 'true');
+  }
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectTF(btn, val) {
+  const row = btn.closest('.tf-row');
+  row.querySelectorAll('.tf-btn').forEach(b => {
+    b.classList.remove('selected-t', 'selected-f');
+  });
+  btn.classList.add(val === 'T' ? 'selected-t' : 'selected-f');
+  const corrInput = row.querySelector('.correction-input');
+  if (val === 'F') {
+    corrInput.classList.add('visible');
+  } else {
+    corrInput.classList.remove('visible');
+  }
+}
+
+function renderResult(result, correct, total, successMessage, partialMessage, failMessage) {
+  result.classList.add('show');
+  if (correct === total) {
+    result.className = 'result-msg show success';
+    result.textContent = successMessage.replace('{correct}', correct).replace('{total}', total);
+  } else if (correct >= total / 2) {
+    result.className = 'result-msg show partial';
+    result.textContent = partialMessage.replace('{correct}', correct).replace('{total}', total);
+  } else {
+    result.className = 'result-msg show fail';
+    result.textContent = failMessage.replace('{correct}', correct).replace('{total}', total);
+  }
+}
+
+function checkTF() {
+  const rows = document.querySelectorAll('#tf-exercises .tf-row');
+  let correct = 0;
+  let total = rows.length;
+  rows.forEach(row => {
+    const correctAnswer = row.dataset.correct;
+    const selected = row.querySelector('.tf-btn.selected-t, .tf-btn.selected-f');
+    const buttons = row.querySelectorAll('.tf-btn');
+    buttons.forEach(b => b.classList.remove('correct-answer', 'wrong-answer'));
+
+    if (selected) {
+      const isT = selected.classList.contains('selected-t');
+      const selectedVal = isT ? 'T' : 'F';
+      if (selectedVal === correctAnswer) {
+        correct++;
+        selected.classList.add('correct-answer');
+      } else {
+        selected.classList.add('wrong-answer');
+      }
+    }
+  });
+
+  renderResult(
+    document.getElementById('tf-result'),
+    correct,
+    total,
+    '✅ Perfect! {correct}/{total} correct!',
+    '⚠️ {correct}/{total} correct. Review the false statements and try again.',
+    '❌ {correct}/{total} correct. Watch the video again and retry.'
+  );
+}
+
+function checkFillBlanks() {
+  const blanks = document.querySelectorAll('#language .fill-blank');
+  let correct = 0;
+  let total = blanks.length;
+  blanks.forEach(blank => {
+    blank.classList.remove('correct', 'incorrect');
+    const answer = blank.dataset.answer.toLowerCase().trim();
+    const userAnswer = blank.value.toLowerCase().trim();
+    if (userAnswer === answer) {
+      blank.classList.add('correct');
+      correct++;
+    } else if (userAnswer !== '') {
+      blank.classList.add('incorrect');
+    }
+  });
+
+  renderResult(
+    document.getElementById('fill-result'),
+    correct,
+    total,
+    '✅ Perfect! {correct}/{total} correct!',
+    '⚠️ {correct}/{total} correct. Some answers need revision.',
+    '❌ {correct}/{total} correct. Watch the extracts again.'
+  );
+}
+
+function checkConvFill() {
+  const blanks = document.querySelectorAll('#conversation .conversation-box .fill-blank');
+  let correct = 0;
+  let total = blanks.length;
+  blanks.forEach(blank => {
+    blank.classList.remove('correct', 'incorrect');
+    const answer = blank.dataset.answer.toLowerCase().trim();
+    const userAnswer = blank.value.toLowerCase().trim();
+    if (userAnswer === answer) {
+      blank.classList.add('correct');
+      correct++;
+    } else if (userAnswer !== '') {
+      blank.classList.add('incorrect');
+    }
+  });
+
+  renderResult(
+    document.getElementById('conv-fill-result'),
+    correct,
+    total,
+    '✅ Perfect! {correct}/{total} correct!',
+    '⚠️ {correct}/{total} correct. Watch the extract again.',
+    '❌ {correct}/{total} correct. Try watching the conversation again.'
+  );
+}
+
+function toggleWho(btn) {
+  btn.classList.toggle('selected');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('button').forEach(button => {
+    button.type = 'button';
+    button.onclick = null;
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(button => {
+    button.addEventListener('click', () => showTab(button.dataset.tab, button));
+  });
+
+  document.querySelectorAll('.tf-btn').forEach(button => {
+    button.addEventListener('click', () => selectTF(button, button.textContent.trim()));
+  });
+
+  document.querySelectorAll('.who-btn').forEach(button => {
+    button.addEventListener('click', () => toggleWho(button));
+  });
+
+  document.querySelectorAll('.check-btn').forEach(button => {
+    const action = button.dataset.check;
+    button.addEventListener('click', () => {
+      if (action === 'tf') checkTF();
+      if (action === 'fill') checkFillBlanks();
+      if (action === 'conv') checkConvFill();
+    });
+  });
+
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.setAttribute('role', 'tabpanel');
+    const tabId = tab.id + '-tab';
+    const correspondingButton = document.getElementById(tabId);
+    if (correspondingButton) {
+      tab.setAttribute('aria-labelledby', tabId);
+    }
+  });
+
+  document.querySelectorAll('.result-msg').forEach(message => {
+    message.setAttribute('aria-live', 'polite');
+  });
+
+  document.querySelectorAll('textarea, .fill-blank').forEach(field => {
+    if (!field.getAttribute('aria-label')) {
+      field.setAttribute('aria-label', field.placeholder || 'Response field');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
+
