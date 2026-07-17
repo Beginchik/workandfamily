@@ -4,372 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eliza Carthy – The Interview & The Conversation</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fontsource-inter@5.0.19/index.css">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #f0f2f5;
-    color: #1a1a2e;
-    line-height: 1.6;
-  }
-  header {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: white;
-    padding: 2rem 1rem;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  }
-  header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem; }
-  header p { opacity: 0.85; font-size: 0.95rem; }
-
-  .tabs {
-    display: flex;
-    flex-wrap: wrap;
-    background: #fff;
-    border-bottom: 3px solid #e0e0e0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  }
-  .tab-btn {
-    flex: 1;
-    min-width: 140px;
-    padding: 0.9rem 0.5rem;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #666;
-    transition: all 0.3s;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -3px;
-  }
-  .tab-btn:hover { color: #0f3460; background: #f8f9fa; }
-  .tab-btn.active {
-    color: #0f3460;
-    border-bottom-color: #e94560;
-    background: #f0f4ff;
-  }
-
-  .tab-content { display: none; padding: 1.5rem; max-width: 960px; margin: 0 auto; }
-  .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-  .section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .section-title .icon {
-    width: 36px; height: 36px;
-    background: #e94560;
-    color: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem;
-  }
-
-  .card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    border-left: 4px solid #e94560;
-  }
-  .card h3 {
-    font-size: 1.1rem;
-    margin-bottom: 0.8rem;
-    color: #1a1a2e;
-  }
-  .card p, .card li { font-size: 0.95rem; color: #444; }
-  .accent-card {
-    border-left-color: #f39c12;
-  }
-
-  .bio-box {
-    background: #fafafa;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 1.2rem;
-    margin: 1rem 0;
-    font-size: 0.95rem;
-    line-height: 1.7;
-  }
-  .bio-box strong { color: #1a1a2e; }
-
-  .video-container {
-    background: #000;
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 1rem 0;
-    aspect-ratio: 16/9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  .video-container video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  .video-placeholder {
-    color: #aaa;
-    text-align: center;
-    padding: 2rem;
-  }
-  .video-placeholder .play-icon {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .question-block {
-    margin: 1rem 0;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 3px solid #0f3460;
-  }
-  .question-block .q-label {
-    font-weight: 700;
-    color: #0f3460;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-  }
-  .question-block ol, .question-block ul {
-    padding-left: 1.5rem;
-    margin: 0.5rem 0;
-  }
-  .question-block li {
-    margin: 0.4rem 0;
-    font-size: 0.93rem;
-  }
-
-  .fill-blank {
-    display: inline-block;
-    border: none;
-    border-bottom: 2px solid #0f3460;
-    background: transparent;
-    font-size: 0.93rem;
-    padding: 0.1rem 0.3rem;
-    min-width: 100px;
-    outline: none;
-    font-family: inherit;
-    transition: border-color 0.3s;
-  }
-  .fill-blank:focus { border-bottom-color: #e94560; }
-  .fill-blank.correct { border-bottom-color: #27ae60; background: #e8f8f0; }
-  .fill-blank.incorrect { border-bottom-color: #e74c3c; background: #fdecea; }
-
-  .tf-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.8rem;
-    padding: 0.7rem 0;
-    border-bottom: 1px solid #eee;
-  }
-  .tf-row:last-child { border-bottom: none; }
-  .tf-row .tf-text { flex: 1; font-size: 0.93rem; }
-  .tf-row .tf-buttons { display: flex; gap: 0.4rem; flex-shrink: 0; }
-  .tf-btn {
-    padding: 0.3rem 0.8rem;
-    border: 2px solid #ddd;
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.85rem;
-    transition: all 0.2s;
-  }
-  .tf-btn:hover { border-color: #0f3460; }
-  .tf-btn.selected-t { background: #27ae60; color: white; border-color: #27ae60; }
-  .tf-btn.selected-f { background: #e74c3c; color: white; border-color: #e74c3c; }
-  .tf-btn.correct-answer { border-color: #27ae60; background: #e8f8f0; }
-  .tf-btn.wrong-answer { border-color: #e74c3c; background: #fdecea; }
-
-  .correction-input {
-    width: 100%;
-    margin-top: 0.4rem;
-    padding: 0.4rem 0.6rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-family: inherit;
-    display: none;
-  }
-  .correction-input.visible { display: block; }
-
-  .checkbox-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.8rem;
-    padding: 0.6rem 0;
-    border-bottom: 1px solid #eee;
-  }
-  .checkbox-row:last-child { border-bottom: none; }
-  .checkbox-row input[type="checkbox"] {
-    width: 18px; height: 18px;
-    margin-top: 3px;
-    accent-color: #0f3460;
-    flex-shrink: 0;
-  }
-  .checkbox-row label { font-size: 0.93rem; flex: 1; }
-  .checkbox-row .who-select {
-    display: flex;
-    gap: 0.4rem;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-  }
-  .who-btn {
-    padding: 0.25rem 0.6rem;
-    border: 1.5px solid #ddd;
-    background: white;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 600;
-    transition: all 0.2s;
-  }
-  .who-btn:hover { border-color: #0f3460; }
-  .who-btn.selected { background: #0f3460; color: white; border-color: #0f3460; }
-
-  .check-btn {
-    background: linear-gradient(135deg, #0f3460, #1a1a2e);
-    color: white;
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-top: 1rem;
-    transition: all 0.3s;
-    box-shadow: 0 2px 8px rgba(15,52,96,0.3);
-  }
-  .check-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(15,52,96,0.4); }
-  .check-btn:active { transform: translateY(0); }
-
-  .result-msg {
-    margin-top: 0.8rem;
-    padding: 0.8rem 1rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    display: none;
-  }
-  .result-msg.show { display: block; animation: fadeIn 0.3s; }
-  .result-msg.success { background: #e8f8f0; color: #27ae60; border: 1px solid #27ae60; }
-  .result-msg.partial { background: #fff8e1; color: #f39c12; border: 1px solid #f39c12; }
-  .result-msg.fail { background: #fdecea; color: #e74c3c; border: 1px solid #e74c3c; }
-
-  .glossary {
-    background: #f0f7ff;
-    border: 1px solid #b8d4f0;
-    border-radius: 8px;
-    padding: 1rem 1.2rem;
-    margin: 1rem 0;
-  }
-  .glossary h4 {
-    color: #0f3460;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-  .glossary p { font-size: 0.88rem; margin: 0.3rem 0; color: #444; }
-  .glossary strong { color: #1a1a2e; }
-
-  .conversation-box {
-    background: #fafafa;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 1.2rem;
-    margin: 1rem 0;
-  }
-  .conv-line {
-    margin: 0.6rem 0;
-    font-size: 0.93rem;
-    line-height: 1.6;
-  }
-  .conv-line .speaker {
-    font-weight: 700;
-    color: #0f3460;
-    margin-right: 0.3rem;
-  }
-
-  .discussion-box {
-    background: #fff8f0;
-    border: 1px solid #f0d9b5;
-    border-radius: 8px;
-    padding: 1.2rem;
-    margin: 1rem 0;
-  }
-  .discussion-box textarea {
-    width: 100%;
-    min-height: 80px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 0.6rem;
-    font-family: inherit;
-    font-size: 0.9rem;
-    resize: vertical;
-    margin-top: 0.5rem;
-  }
-  .discussion-box textarea:focus { outline: none; border-color: #0f3460; }
-
-  .sub-heading {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #1a1a2e;
-    margin: 1.2rem 0 0.6rem;
-    padding-left: 0.5rem;
-    border-left: 3px solid #e94560;
-  }
-
-  .photo-placeholder,
-  .family-photo,
-  .conversation-photo {
-    width: 100%;
-    max-width: 500px;
-    height: 220px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 1rem auto;
-    overflow: hidden;
-    background: #e9ecef;
-  }
-
-  .photo-placeholder {
-    max-width: 400px;
-    height: 200px;
-  }
-
-  .photo-placeholder img,
-  .family-photo img,
-  .conversation-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  @media (max-width: 600px) {
-    .tab-btn { font-size: 0.78rem; padding: 0.7rem 0.3rem; min-width: 100px; }
-    .tab-content { padding: 1rem; }
-    .card { padding: 1rem; }
-    header h1 { font-size: 1.3rem; }
-    .tf-row { flex-direction: column; gap: 0.4rem; }
-    .checkbox-row { flex-direction: column; gap: 0.4rem; }
-  }
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -384,7 +19,13 @@
   <button class="tab-btn" type="button" id="part3-tab" data-tab="part3" role="tab" aria-selected="false" aria-controls="part3">Part 3</button>
   <button class="tab-btn" type="button" id="language-tab" data-tab="language" role="tab" aria-selected="false" aria-controls="language">Language</button>
   <button class="tab-btn" type="button" id="conversation-tab" data-tab="conversation" role="tab" aria-selected="false" aria-controls="conversation">Conversation</button>
+  <button class="tab-btn" type="button" id="homework-tab" data-tab="homework" role="tab" aria-selected="false" aria-controls="homework">Homework</button>
 </nav>
+
+<div class="page-tools">
+  <span id="save-status" class="save-status" aria-live="polite">Progress saves automatically</span>
+  <button id="reset-progress" class="secondary-btn" type="button">Reset all answers</button>
+</div>
 
 <!-- ==================== PART 1 ==================== -->
 <div id="part1" class="tab-content active">
@@ -421,50 +62,62 @@
       </video>
     </div>
 
+    <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-transcript" data-show-label="Show transcript" data-hide-label="Hide transcript">Show transcript</button>
+    <div id="part1-transcript" class="reveal-panel transcript" hidden>
+      <div class="transcript-title">Part 1 transcript</div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>Eliza Carthy, could you tell us a bit about your family background, your parents, and grandparents?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>Um, I come from a musical family: my parents are folk singers; my father is a guitarist who is known for playing, for playing guitar, um, and inventing a particular style of English folk guitar. Um, he started playing when he was seventeen, back in the fifties, and, um, really was, was quite instrumental in his youth in sort of building the, the sixties folk club scene in London. He was a friend of Bob Dylan and Paul Simon many, many years ago, and, um, is known for reconstructing old, traditional ballads – traditional English ballads. My mother comes from a folk-singing family called The Watersons, and they were from the north of England. They're from Hull, which is in the north of England, and they were also instrumental in the beginning of the sixties folk revival, the formation of the folk clubs, and the, the beginning of, basically, the professional music scene that I work on now.</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>And were your parents both from musical families?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>Um, really both sides of my family are musical; my mother's side of the family they were all travellers and gypsies. My, er, her grandmother – she was brought up by her grandmother: both of her parents died when she was very young. She had an uncle that played the trumpet, you know, her father played the banjo – he used to listen to American radio during the Second World War and he used to learn the songs off the radio like that. Her grandmother was very into the sort of old romantic ballads like <em>The Spinning Wheel</em> and things like that, and she used to, she used to sing when they were little. The whole family sang; the whole family danced. And I was brought up in that kind of a family; my mother and her, her brother and her sister were in a singing group, my dad joined that singing group, and then, when I was old enough, I joined the family as well.</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>So you had a very musical upbringing?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>My upbringing was, I suppose some people might think it was quite a hippy upbringing. I was brought up on a farm, um, that had three houses in a row, with me and my mum and dad in the end house, my uncle – my mum's brother – and his wife and their four children in the middle house, and then my mum's sister and her husband and their two children on, on the other end house. And we grew up basically self-sufficient: we had animals and, um, we had chickens and goats and pigs and horses, and things like that, and we, we grew up singing together and living together in that environment in North Yorkshire in the nineteen seventies. Because my parents were professional musicians and touring musicians, we had a lot of touring musician friends who would come and stay at the farm, and they would sing and play all the time, and there was music all around when I was a child, and that really, that really formed the basis of, of, of how I live now.</span></div>
+    </div>
+
     <div class="discussion-box">
       <p><strong>Your answer:</strong></p>
       <textarea placeholder="Write Eliza's overwhelming memory of her childhood here..."></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-main-answer">Show answer</button>
+      <div id="part1-main-answer" class="reveal-panel" hidden>Eliza's overwhelming memory of her childhood is of being with her family on the farm, surrounded by travelling musicians, listening to music, singing, and playing.</div>
     </div>
   </div>
 
   <div class="card">
     <h3>c) Now watch again. What does Eliza say about…?</h3>
 
-    <div class="question-block">
-      <ol>
-        <li>her father in the 50s and 60s</li>
-        <li>The Watersons</li>
-        <li>her mother's grandmother</li>
-        <li>her mother's uncle and father</li>
-        <li><em>The Spinning Wheel</em></li>
-        <li>the farm where she was brought up</li>
-        <li>her parents' friends</li>
-      </ol>
-    </div>
-
     <div class="discussion-box">
       <p><strong>1. Her father in the 50s and 60s:</strong></p>
       <textarea placeholder="What does Eliza say about her father in the 50s and 60s?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-c-answer-1">Show answer</button>
+      <div id="part1-c-answer-1" class="reveal-panel" hidden>He started playing the guitar in the 50s. In the 60s he helped to create the folk music scene in London. He was friends with Bob Dylan and Paul Simon.</div>
       <p style="margin-top:0.8rem;"><strong>2. The Watersons:</strong></p>
       <textarea placeholder="What does Eliza say about The Watersons?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-c-answer-2">Show answer</button>
+      <div id="part1-c-answer-2" class="reveal-panel" hidden>The Watersons are a folk group from her mother's side of the family. They are from Hull. They were important in the 60s folk revival and in the development of folk clubs in the north of England.</div>
       <p style="margin-top:0.8rem;"><strong>3. Her mother's grandmother:</strong></p>
       <textarea placeholder="What does Eliza say about her mother's grandmother?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-c-answer-3">Show answer</button>
+      <div id="part1-c-answer-3" class="reveal-panel" hidden>Her mother's grandmother brought her mother up, as her parents had died.</div>
       <p style="margin-top:0.8rem;"><strong>4. Her mother's uncle and father:</strong></p>
       <textarea placeholder="What does Eliza say about her mother's uncle and father?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-c-answer-4">Show answer</button>
+      <div id="part1-c-answer-4" class="reveal-panel" hidden>Her mother's uncle played the trumpet. Her mother's father played the banjo. He used to listen to music on the radio and learn the songs he heard.</div>
       <p style="margin-top:0.8rem;"><strong>5. The Spinning Wheel:</strong></p>
       <textarea placeholder="What does Eliza say about The Spinning Wheel?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-c-answer-5">Show answer</button>
+      <div id="part1-c-answer-5" class="reveal-panel" hidden>Her grandmother used to sing <em>The Spinning Wheel</em> when Eliza was young.</div>
       <p style="margin-top:0.8rem;"><strong>6. The farm where she was brought up:</strong></p>
       <textarea placeholder="What does Eliza say about the farm?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-c-answer-6">Show answer</button>
+      <div id="part1-c-answer-6" class="reveal-panel" hidden>The farm had three houses in a row – one for Eliza and her parents, one for her mother's brother and his family, and one for her mother's sister and her family. They kept a lot of animals. There was always singing and music being played at the farm.</div>
       <p style="margin-top:0.8rem;"><strong>7. Her parents' friends:</strong></p>
       <textarea placeholder="What does Eliza say about her parents' friends?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part1-c-answer-7">Show answer</button>
+      <div id="part1-c-answer-7" class="reveal-panel" hidden>Her parents' friends were touring musicians who often stayed on the farm.</div>
     </div>
   </div>
 
   <div class="card">
     <h3>d) Do you think Eliza's upbringing sounds like it was fun or quite hard? Why?</h3>
-    <div class="discussion-box">
-      <textarea placeholder="Share your thoughts about Eliza's upbringing..."></textarea>
-    </div>
   </div>
 
   <div class="glossary">
@@ -497,11 +150,24 @@
       </video>
     </div>
 
+    <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part2-transcript" data-show-label="Show transcript" data-hide-label="Hide transcript">Show transcript</button>
+    <div id="part2-transcript" class="reveal-panel transcript" hidden>
+      <div class="transcript-title">Part 2 transcript</div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>Do you think it was inevitable that you’d become a professional musician?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>Well, if you, if you were ever to ask any of us, were it – we would definitely have all said no. I wanted to be, I wanted to be a writer; my mum certainly didn’t want me to go on the road. My mum retired in nineteen sixty-six – sixty-five / sixty-six – from professional touring to raise me. I mean, the road is a difficult place, whether you’re travelling with your family, or with a band, or on your own, and she certainly didn’t want that for me. My dad also probably never thought that I would do it, but I ended up following, exactly following, his footsteps and quitting school when I was seventeen and going on the road, and I’ve been on the road ever since.</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>Can you tell us about your first public performance?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>My dad says that my first public performance was at the Fylde Folk Music Festival in Fleetwood, in Lancashire, when I was six, and we were at the Marine Hall and they were singing – The Watersons, the family, the family group were singing – and I asked if I could, I asked if I could go up on stage with them, and I was six. And Dad said, ‘Well, you know, you probably don’t know everything, so just stand next to me on stage and we’ll start singing, and if you, if you know the song, just pull on my leg and I’ll lift you up to the microphone and you can, you can join in.’ God, I must have been awful! But yes, apparently, I just, the first song they started up singing, tugged on his leg, and he picked me up and he held me to the microphone and I sang that, and he was like, ‘Did you enjoy that?’ ‘Yes, I did!’ And he put me down again and they started singing the next one, tugged on his leg, same thing! And he just ended up doing the whole concert with me sitting on his hip! Which, er, now I have a six-year-old and I know how heavy she is, and it must have been quite difficult, God bless him!</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>Has having children yourself changed your approach to your career?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>Er, yes, in a way. Yes, in a way it has. I’ve just reordered my working year because my eldest daughter has just started school, so I, you know, I’m, I’m not free to, to take the children with me on the road any more, and, and I’m now bound by the school terms. So, I try to work only on the weekends and in school holidays now, and I try to, to be Mummy from Monday to Friday, taking them to school, bringing them back again. I’m not getting a great deal of sleep, but then I don’t know many mothers of, many mothers of six- and four-year-olds that are getting a great deal of sleep!</span></div>
+    </div>
+
     <div class="discussion-box">
       <p><strong>What was Eliza like as a child?</strong></p>
       <textarea placeholder="Describe Eliza as a child..."></textarea>
       <p style="margin-top:0.8rem;"><strong>What do you find out about her as a mother?</strong></p>
       <textarea placeholder="What did you learn about Eliza as a mother?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part2-a-answer">Show suggested answer</button>
+      <div id="part2-a-answer" class="reveal-panel" hidden>Eliza was probably quite an independent and confident child. As a mother, she focuses on her children and organizes her work around them.</div>
     </div>
   </div>
 
@@ -511,24 +177,33 @@
     <div class="discussion-box">
       <p><strong>1. Did Eliza originally want to become a musician?</strong></p>
       <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part2-b-answer-1">Show answer</button>
+      <div id="part2-b-answer-1" class="reveal-panel" hidden>No, she wanted to be a writer.</div>
       <p style="margin-top:0.8rem;"><strong>2. Why did her mother retire?</strong></p>
       <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part2-b-answer-2">Show answer</button>
+      <div id="part2-b-answer-2" class="reveal-panel" hidden>To bring Eliza up, and because she didn’t want her to grow up touring and travelling.</div>
       <p style="margin-top:0.8rem;"><strong>3. How old was she at her first public performance?</strong></p>
       <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part2-b-answer-3">Show answer</button>
+      <div id="part2-b-answer-3" class="reveal-panel" hidden>Six.</div>
       <p style="margin-top:0.8rem;"><strong>4. How much did she sing during the concert?</strong></p>
       <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part2-b-answer-4">Show answer</button>
+      <div id="part2-b-answer-4" class="reveal-panel" hidden>She sang all the songs.</div>
       <p style="margin-top:0.8rem;"><strong>5. How has she reorganized her life because of having her own children?</strong></p>
       <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part2-b-answer-5">Show answer</button>
+      <div id="part2-b-answer-5" class="reveal-panel" hidden>She now tries to only work at weekends and during school holidays, so that she can take care of her children during the week.</div>
       <p style="margin-top:0.8rem;"><strong>6. What does she feel she's lacking at the moment?</strong></p>
       <textarea placeholder="Your answer..."></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part2-b-answer-6">Show answer</button>
+      <div id="part2-b-answer-6" class="reveal-panel" hidden>Sleep.</div>
     </div>
   </div>
 
   <div class="card">
     <h3>c) What do you think of Eliza's work-life balance?</h3>
-    <div class="discussion-box">
-      <textarea placeholder="Share your thoughts on Eliza's work-life balance..."></textarea>
-    </div>
   </div>
 
   <div class="glossary">
@@ -558,8 +233,21 @@
       </video>
     </div>
 
+    <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part3-transcript" data-show-label="Show transcript" data-hide-label="Hide transcript">Show transcript</button>
+    <div id="part3-transcript" class="reveal-panel transcript" hidden>
+      <div class="transcript-title">Part 3 transcript</div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>You do a lot of collaborations with other musicians. What is it that appeals to you about working like that?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>I like working with other – I don’t like working alone. I don’t know if that’s because I don’t trust myself or I just don’t like being alone; I like being surrounded by a big crowd of people. I suppose that’s, that’s partly to do with my upbringing: there was always so many people around that, um, I’ve, I’m at my best, I’m at my best in a, in a large event where loads of people are running around doing things, and we’re all sort of collaborating with each other, and there’s lots of ideas, and everyone’s having, you know, a creative time. And that’s how I feel – yeah, that’s how I feel, I work best, and that’s why at the moment I have a thirteen-piece band and it’s just heaven for me being with so many people and just feeling like a part of a big machine – I love that.</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>Is there a difference between playing with your family and playing with other people?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>Um, yes, very much so. I’m not sure if I could tell you how different or why it’s different. My dad is very eloquent on how and why it’s different, and he, he knows that uniquely because he joined The Watersons, and The Watersons was a brother and two sisters. And he joined that, and of course he was married to my mum, but he wasn’t related to her. And, there is this thing within family groups, this blood harmony thing, this intuition – you have similar sounding voices, you know where a relative is going to go, and that may be because you know each other so well, but it also may be whatever it is that binds a family together anyway.</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">I</span><span>Would you like your children to follow in your footsteps?</span></div>
+      <div class="transcript-line"><span class="transcript-speaker">E</span><span>I get very, very excited when the children, um, when the children love music, I get very excited. My daughter Florence is very, very sharp: she listens and she can already – she plays <em>Twinkle Twinkle</em> on the violin, plucking like that, and on the guitar as well, and she’s – yeah, she has a very, very good sense of rhythm. And she loves foreign languages as well – there’s a real, um, there’s a real sort of correlation there between, between language and singing. She has great pitch; she is able to learn songs and things very, very quickly, and I love that. And Isabella, my youngest, as well – she’s really, she’s really showing interest in it and I love it when they do that. As to whether or not I’d want them to be touring musicians, I think I would probably of the same opinion as my mother, which is, ‘No, not really!’ But, you know, I, I think the – I think the world is changing anyway, I don’t know how many touring musicians there are going to be in the world in twenty years, when they’re ready – I don’t know.</span></div>
+    </div>
+
     <div class="discussion-box">
       <textarea placeholder="How has Eliza's family influenced her approach to music?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="part3-a-answer">Show suggested answer</button>
+      <div id="part3-a-answer" class="reveal-panel" hidden>When she was growing up, there were always a lot of musicians around, so now she doesn’t like working alone.</div>
     </div>
   </div>
 
@@ -570,17 +258,17 @@
       <div class="tf-row" data-correct="T">
         <div class="tf-text">1. Eliza thinks the reason she doesn't like working alone is because of being brought up surrounded by people.</div>
         <div class="tf-buttons">
-          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
-          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+          <button class="tf-btn">T</button>
+          <button class="tf-btn">F</button>
         </div>
         <input type="text" class="correction-input" placeholder="Correct the sentence...">
       </div>
 
-      <div class="tf-row" data-correct="F">
+      <div class="tf-row" data-correct="F" data-correction="She has a 13-piece band.">
         <div class="tf-text">2. At the moment she has a 30-piece band.</div>
         <div class="tf-buttons">
-          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
-          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+          <button class="tf-btn">T</button>
+          <button class="tf-btn">F</button>
         </div>
         <input type="text" class="correction-input" placeholder="Correct the sentence...">
       </div>
@@ -588,26 +276,26 @@
       <div class="tf-row" data-correct="T">
         <div class="tf-text">3. Her father understands that working with family members is different.</div>
         <div class="tf-buttons">
-          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
-          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+          <button class="tf-btn">T</button>
+          <button class="tf-btn">F</button>
         </div>
         <input type="text" class="correction-input" placeholder="Correct the sentence...">
       </div>
 
-      <div class="tf-row" data-correct="F">
+      <div class="tf-row" data-correct="F" data-correction="The Watersons were her mother's relatives.">
         <div class="tf-text">4. Her father was a blood relation in the group The Watersons.</div>
         <div class="tf-buttons">
-          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
-          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+          <button class="tf-btn">T</button>
+          <button class="tf-btn">F</button>
         </div>
         <input type="text" class="correction-input" placeholder="Correct the sentence...">
       </div>
 
-      <div class="tf-row" data-correct="T">
+      <div class="tf-row" data-correct="F" data-correction="She plays two musical instruments – the violin and the guitar.">
         <div class="tf-text">5. Eliza's daughter Florence plays three musical instruments and also sings well.</div>
         <div class="tf-buttons">
-          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
-          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+          <button class="tf-btn">T</button>
+          <button class="tf-btn">F</button>
         </div>
         <input type="text" class="correction-input" placeholder="Correct the sentence...">
       </div>
@@ -615,17 +303,17 @@
       <div class="tf-row" data-correct="T">
         <div class="tf-text">6. She thinks there's a close link between foreign languages and singing.</div>
         <div class="tf-buttons">
-          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
-          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+          <button class="tf-btn">T</button>
+          <button class="tf-btn">F</button>
         </div>
         <input type="text" class="correction-input" placeholder="Correct the sentence...">
       </div>
 
-      <div class="tf-row" data-correct="F">
+      <div class="tf-row" data-correct="F" data-correction="She is showing an interest.">
         <div class="tf-text">7. Her younger daughter Isabella is not yet interested in music.</div>
         <div class="tf-buttons">
-          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
-          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+          <button class="tf-btn">T</button>
+          <button class="tf-btn">F</button>
         </div>
         <input type="text" class="correction-input" placeholder="Correct the sentence...">
       </div>
@@ -633,8 +321,8 @@
       <div class="tf-row" data-correct="T">
         <div class="tf-text">8. She would rather her children didn't become touring musicians.</div>
         <div class="tf-buttons">
-          <button class="tf-btn" onclick="selectTF(this,'T')">T</button>
-          <button class="tf-btn" onclick="selectTF(this,'F')">F</button>
+          <button class="tf-btn">T</button>
+          <button class="tf-btn">F</button>
         </div>
         <input type="text" class="correction-input" placeholder="Correct the sentence...">
       </div>
@@ -642,13 +330,13 @@
 
     <button class="check-btn" type="button" data-check="tf">Check Answers</button>
     <div id="tf-result" class="result-msg"></div>
+    <div id="tf-answer-key" class="reveal-panel" hidden>
+      <strong>Answer key:</strong> 1 T; 2 F – She has a 13-piece band.; 3 T; 4 F – The Watersons were her mother’s relatives.; 5 F – She plays two musical instruments: the violin and the guitar.; 6 T; 7 F – She is showing an interest.; 8 T.
+    </div>
   </div>
 
   <div class="card">
     <h3>c) Did you ever want to have the same job as your parents? Would you like to work with any members of your family? Why (not)?</h3>
-    <div class="discussion-box">
-      <textarea placeholder="Share your thoughts..."></textarea>
-    </div>
   </div>
 
   <div class="glossary">
@@ -680,37 +368,37 @@
     </div>
 
     <div class="question-block">
-      <p><strong>1.</strong> '…and they were also instrumental in the beginning of the 60s folk revival, the formation of the folk clubs, and the, the beginning of, <input type="text" class="fill-blank" data-answer="therefore" placeholder="_______">, the professional music scene that I work on now.'</p>
+      <p><strong>1.</strong> '…and they were also instrumental in the beginning of the 60s folk revival, the formation of the folk clubs, and the, the beginning of, <input type="text" class="fill-blank" data-answer="basically" placeholder="_______">, the professional music scene that I work on now.'</p>
     </div>
 
     <div class="question-block">
       <p><strong>2. Interviewer</strong> 'And were your parents both from musical families?'</p>
-      <p><strong>Eliza</strong> 'Um, <input type="text" class="fill-blank" data-answer="actually" placeholder="_______">, both sides of my family are musical…'</p>
+      <p><strong>Eliza</strong> 'Um, <input type="text" class="fill-blank" data-answer="really" placeholder="_______">, both sides of my family are musical…'</p>
     </div>
 
     <div class="question-block">
-      <p><strong>3.</strong> 'My mum retired in 1966–65/66 from professional touring to raise me. <input type="text" class="fill-blank" data-answer="After" placeholder="_______"> <input type="text" class="fill-blank" data-answer="all" placeholder="_______">, the road is a difficult place…'</p>
+      <p><strong>3.</strong> 'My mum retired in 1966–65/66 from professional touring to raise me. <input type="text" class="fill-blank" data-answer="I" placeholder="_______"> <input type="text" class="fill-blank" data-answer="mean" placeholder="_______">, the road is a difficult place…'</p>
     </div>
 
     <div class="question-block">
-      <p><strong>4.</strong> 'But yes, <input type="text" class="fill-blank" data-answer="anyway" placeholder="_______"> I just – the first song they started up singing, tugged on his leg…'</p>
+      <p><strong>4.</strong> 'But yes, <input type="text" class="fill-blank" data-answer="apparently" placeholder="_______"> I just – the first song they started up singing, tugged on his leg…'</p>
     </div>
 
     <div class="question-block">
       <p><strong>5. Interviewer</strong> 'Has having children yourself changed your approach to your career?'</p>
-      <p><strong>Eliza</strong> 'Er, yes, <input type="text" class="fill-blank" data-answer="definitely" placeholder="_______"> a <input type="text" class="fill-blank" data-answer="lot" placeholder="_______">. Yes, <input type="text" class="fill-blank" data-answer="absolutely" placeholder="_______"> a <input type="text" class="fill-blank" data-answer="lot" placeholder="_______">, it has.'</p>
+      <p><strong>Eliza</strong> 'Er, yes, <input type="text" class="fill-blank" data-answer="in" placeholder="_______"> a <input type="text" class="fill-blank" data-answer="way" placeholder="_______">. Yes, <input type="text" class="fill-blank" data-answer="in" placeholder="_______"> a <input type="text" class="fill-blank" data-answer="way" placeholder="_______">, it has.'</p>
     </div>
 
     <div class="question-block">
-      <p><strong>6.</strong> '…The Watersons was a brother and two sisters, and he joined that, and <input type="text" class="fill-blank" data-answer="obviously" placeholder="_______"> <input type="text" class="fill-blank" data-answer="then" placeholder="_______"> he was married to my mum, but he wasn't related to her.'</p>
+      <p><strong>6.</strong> '…The Watersons was a brother and two sisters, and he joined that, and <input type="text" class="fill-blank" data-answer="of" placeholder="_______"> <input type="text" class="fill-blank" data-answer="course" placeholder="_______"> he was married to my mum, but he wasn't related to her.'</p>
     </div>
 
     <div class="question-block">
-      <p><strong>7.</strong> 'And Isabella, my youngest as well, she's really, she's really showing interest in it and I love it when they do that. <input type="text" class="fill-blank" data-answer="I" placeholder="_______"> <input type="text" class="fill-blank" data-answer="mean" placeholder="_______"> whether or not I'd want them to be touring musicians…'</p>
+      <p><strong>7.</strong> 'And Isabella, my youngest as well, she's really, she's really showing interest in it and I love it when they do that. <input type="text" class="fill-blank" data-answer="As" placeholder="_______"> <input type="text" class="fill-blank" data-answer="to" placeholder="_______"> whether or not I'd want them to be touring musicians…'</p>
     </div>
 
     <div class="question-block">
-      <p><strong>8.</strong> 'But, you know, I think the – I think the world is changing <input type="text" class="fill-blank" data-answer="though" placeholder="_______">, I don't know how many touring musicians there are going to be in the world in 20 years…'</p>
+      <p><strong>8.</strong> 'But, you know, I think the – I think the world is changing <input type="text" class="fill-blank" data-answer="anyway" placeholder="_______">, I don't know how many touring musicians there are going to be in the world in 20 years…'</p>
     </div>
 
     <button class="check-btn" type="button" data-check="fill">Check Answers</button>
@@ -721,6 +409,19 @@
     <h3>b) How do the discourse markers affect the meaning of what Eliza says in each extract?</h3>
     <div class="discussion-box">
       <textarea placeholder="Analyse how the discourse markers affect the meaning in each extract..."></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="language-b-answer">Show answer</button>
+      <div id="language-b-answer" class="reveal-panel" hidden>
+        <ol>
+          <li><strong>basically</strong> introduces an important or fundamental point.</li>
+          <li><strong>really</strong> introduces an interesting or unexpected fact.</li>
+          <li><strong>I mean</strong> introduces more details or clarification.</li>
+          <li><strong>apparently</strong> introduces something she learnt from someone else—she doesn’t remember it herself, but she’s been told.</li>
+          <li><strong>in a way</strong> shows that she is uncertain.</li>
+          <li><strong>of course</strong> introduces a clear fact.</li>
+          <li><strong>As to</strong> introduces a point she wants to address.</li>
+          <li><strong>anyway</strong> shows that she’s introducing a new angle on the topic.</li>
+        </ol>
+      </div>
     </div>
   </div>
 </div>
@@ -730,7 +431,7 @@
   <div class="section-title"><span class="icon">3</span> THE CONVERSATION</div>
 
   <div class="conversation-photo">
-    <img src="Images/03_eliza.png" alt="Duncan, Joanne and Alice in conversation" loading="lazy">
+    <img src="Images/04_eliza.png" alt="Duncan, Joanne and Alice in conversation" loading="lazy">
   </div>
 
   <div class="card">
@@ -746,116 +447,45 @@
       </video>
     </div>
 
-    <div class="checkbox-row">
-      <input type="checkbox" id="conv1a">
-      <label for="conv1a">1. worked for their family business</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
+    <div id="conversation-who-a">
+    <div class="checkbox-row" data-speaker="Joanne">
+      <div class="choice-text">1. worked for their family business</div>
+      <div class="who-select" role="group" aria-label="Question 1 speaker"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button></div>
+    </div>
+    <div class="checkbox-row" data-speaker="Alice">
+      <div class="choice-text">2. knows someone who worked for their family business</div>
+      <div class="who-select" role="group" aria-label="Question 2 speaker"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button></div>
+    </div>
+    <div class="checkbox-row" data-speaker="Duncan">
+      <div class="choice-text">3. doesn't mention their own family</div>
+      <div class="who-select" role="group" aria-label="Question 3 speaker"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button></div>
+    </div>
     </div>
 
-    <div class="checkbox-row">
-      <input type="checkbox" id="conv2a">
-      <label for="conv2a">2. knows someone who worked for their family business</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
-    </div>
-
-    <div class="checkbox-row">
-      <input type="checkbox" id="conv3a">
-      <label for="conv3a">3. doesn't mention their own family</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
-    </div>
+    <button class="check-btn" type="button" data-check="conv-who-a">Check Answers</button>
+    <div id="conv-who-a-result" class="result-msg"></div>
   </div>
 
   <div class="card">
     <h3>b) Watch again. Which of these advantages and disadvantages of working in a family business are mentioned, and by whom?</h3>
 
-    <div class="checkbox-row">
-      <input type="checkbox" id="adv1">
-      <label for="adv1">1. If your parents run a business, it can be very convenient to work for them.</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
+    <p style="margin-bottom:0.6rem;">Choose the speaker, or choose <strong>Not mentioned</strong>.</p>
+    <div id="conversation-who-b">
+    <div class="checkbox-row" data-speaker="Joanne"><div class="choice-text">1. If your parents run a business, it can be very convenient to work for them.</div><div class="who-select" role="group" aria-label="Statement 1 answer"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button><button class="who-btn" aria-pressed="false">Not mentioned</button></div></div>
+    <div class="checkbox-row" data-speaker="Joanne"><div class="choice-text">2. It can be a problem to take a break from work.</div><div class="who-select" role="group" aria-label="Statement 2 answer"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button><button class="who-btn" aria-pressed="false">Not mentioned</button></div></div>
+    <div class="checkbox-row" data-speaker="Not mentioned"><div class="choice-text">3. If the business is successful, all the money stays in the family.</div><div class="who-select" role="group" aria-label="Statement 3 answer"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button><button class="who-btn" aria-pressed="false">Not mentioned</button></div></div>
+    <div class="checkbox-row" data-speaker="Duncan"><div class="choice-text">4. It can be difficult to achieve a good work-life balance.</div><div class="who-select" role="group" aria-label="Statement 4 answer"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button><button class="who-btn" aria-pressed="false">Not mentioned</button></div></div>
+    <div class="checkbox-row" data-speaker="Alice"><div class="choice-text">5. Sometimes family members can be taken advantage of.</div><div class="who-select" role="group" aria-label="Statement 5 answer"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button><button class="who-btn" aria-pressed="false">Not mentioned</button></div></div>
+    <div class="checkbox-row" data-speaker="Not mentioned"><div class="choice-text">6. It's impossible to maintain good relations with your family.</div><div class="who-select" role="group" aria-label="Statement 6 answer"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button><button class="who-btn" aria-pressed="false">Not mentioned</button></div></div>
+    <div class="checkbox-row" data-speaker="Alice"><div class="choice-text">7. It makes you understand how difficult it is to run a business.</div><div class="who-select" role="group" aria-label="Statement 7 answer"><button class="who-btn" aria-pressed="false">Duncan</button><button class="who-btn" aria-pressed="false">Joanne</button><button class="who-btn" aria-pressed="false">Alice</button><button class="who-btn" aria-pressed="false">Not mentioned</button></div></div>
     </div>
 
-    <div class="checkbox-row">
-      <input type="checkbox" id="adv2">
-      <label for="adv2">2. It can be a problem to take a break from work.</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
-    </div>
-
-    <div class="checkbox-row">
-      <input type="checkbox" id="adv3">
-      <label for="adv3">3. If the business is successful, all the money stays in the family.</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
-    </div>
-
-    <div class="checkbox-row">
-      <input type="checkbox" id="adv4">
-      <label for="adv4">4. It can be difficult to achieve a good work-life balance.</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
-    </div>
-
-    <div class="checkbox-row">
-      <input type="checkbox" id="adv5">
-      <label for="adv5">5. Sometimes family members can be taken advantage of.</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
-    </div>
-
-    <div class="checkbox-row">
-      <input type="checkbox" id="adv6">
-      <label for="adv6">6. It's impossible to maintain good relations with your family.</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
-    </div>
-
-    <div class="checkbox-row">
-      <input type="checkbox" id="adv7">
-      <label for="adv7">7. It makes you understand how difficult it is to run a business.</label>
-      <div class="who-select">
-        <button class="who-btn" onclick="toggleWho(this)">Duncan</button>
-        <button class="who-btn" onclick="toggleWho(this)">Joanne</button>
-        <button class="who-btn" onclick="toggleWho(this)">Alice</button>
-      </div>
-    </div>
+    <button class="check-btn" type="button" data-check="conv-who-b">Check Answers</button>
+    <div id="conv-who-b-result" class="result-msg"></div>
   </div>
 
   <div class="card">
     <h3>c) Do you think that on the whole it's a positive thing to work for a family business?</h3>
-    <div class="discussion-box">
-      <textarea placeholder="Share your opinion..."></textarea>
-    </div>
   </div>
 
   <div class="card">
@@ -873,15 +503,15 @@
 
     <div class="conversation-box">
       <div class="conv-line"><span class="speaker">Alice</span> …my parents would go off to work and I knew that was a place that they went off…</div>
-      <div class="conv-line"><span class="speaker">Joanne</span> <input type="text" class="fill-blank" data-answer="yeah" placeholder="_______" style="min-width:150px;">.</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> <input type="text" class="fill-blank" data-answer="yes" placeholder="_______" style="min-width:150px;">.</div>
       <div class="conv-line"><span class="speaker">Alice</span> …to make money…but I didn't see it, so I –</div>
-      <div class="conv-line"><span class="speaker">Joanne</span> I think that's really <input type="text" class="fill-blank" data-answer="important" placeholder="_______" style="min-width:120px;">, to appreciate it. Yes, <input type="text" class="fill-blank" data-answer="exactly" placeholder="_______" style="min-width:100px;">.</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> I think that's really <input type="text" class="fill-blank" data-answer="important" placeholder="_______" style="min-width:120px;">, to appreciate it. Yes, <input type="text" class="fill-blank" data-answer="totally" placeholder="_______" style="min-width:100px;">.</div>
       <div class="conv-line"><span class="speaker">Alice</span> It makes you appreciate it, it more and you see the hard work and the stresses…</div>
-      <div class="conv-line"><span class="speaker">Joanne</span> <input type="text" class="fill-blank" data-answer="yeah" placeholder="_______" style="min-width:100px;">.</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> <input type="text" class="fill-blank" data-answer="yes" placeholder="_______" style="min-width:100px;">.</div>
       <div class="conv-line"><span class="speaker">Alice</span> …of running a business.</div>
-      <div class="conv-line"><span class="speaker">Joanne</span> So it could be an <input type="text" class="fill-blank" data-answer="advantage" placeholder="_______" style="min-width:130px;">…</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> So it could be an <input type="text" class="fill-blank" data-answer="opportunity" placeholder="_______" style="min-width:130px;">…</div>
       <div class="conv-line"><span class="speaker">Alice</span> Definitely.</div>
-      <div class="conv-line"><span class="speaker">Joanne</span> …one <input type="text" class="fill-blank" data-answer="way" placeholder="_______" style="min-width:80px;">, rather than an exploitative situation.</div>
+      <div class="conv-line"><span class="speaker">Joanne</span> …one <input type="text" class="fill-blank" data-answer="hopes" placeholder="_______" style="min-width:80px;">, rather than an exploitative situation.</div>
     </div>
 
     <button class="check-btn" type="button" data-check="conv">Check Answers</button>
@@ -890,201 +520,155 @@
     <div class="discussion-box" style="margin-top:1rem;">
       <p><strong>What is Joanne's intention?</strong></p>
       <textarea placeholder="What do you think Joanne is trying to do when she speaks at the same time as Alice?"></textarea>
+      <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="conversation-d-intention">Show answer</button>
+      <div id="conversation-d-intention" class="reveal-panel" hidden>Joanne is responding to Alice’s points and encouraging her to speak.</div>
     </div>
   </div>
 
   <div class="card">
     <h3>e) Now have a conversation in groups of three. Discuss the statements.</h3>
-
-    <div class="discussion-box">
-      <p><strong>1. It's much easier for the children of successful parents to be successful themselves.</strong></p>
-      <textarea placeholder="Discuss this statement..."></textarea>
-      <p style="margin-top:0.8rem;"><strong>2. It's not possible to both have a successful career and be a successful parent.</strong></p>
-      <textarea placeholder="Discuss this statement..."></textarea>
+    <div class="question-block">
+      <ol>
+        <li>It's much easier for the children of successful parents to be successful themselves.</li>
+        <li>It's not possible to both have a successful career and be a successful parent.</li>
+      </ol>
     </div>
   </div>
 </div>
 
-<script>
-function showTab(id, button = null) {
-  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-    btn.setAttribute('aria-selected', 'false');
-  });
+<!-- ==================== HOMEWORK ==================== -->
+<div id="homework" class="tab-content">
+  <div class="section-title"><span class="icon">✓</span> HOMEWORK</div>
+  <button id="print-homework" class="secondary-btn" type="button">Print Homework</button>
 
-  document.getElementById(id).classList.add('active');
-  if (button) {
-    button.classList.add('active');
-    button.setAttribute('aria-selected', 'true');
-  }
+  <div class="card">
+    <h3>1. Looking at Language: discourse markers</h3>
+    <p>Complete the sentences with the best discourse marker from the list.</p>
+    <div class="word-bank" aria-label="Discourse marker word bank">
+      <span>anyway</span><span>apparently</span><span>as to</span><span>basically</span><span>I mean</span><span>in a way</span><span>of course</span><span>really</span>
+    </div>
+    <ol id="homework-discourse" class="homework-list">
+      <li>My parents are retired, so they <span class="homework-example">basically</span> do the same at weekends as they would on a weekday.</li>
+      <li>My sister gets quite lonely in the evenings. <input class="homework-input" data-answer="of course|I mean" aria-label="Homework 1, sentence 2">, her husband’s around, but he’s always falling asleep in front of the TV.</li>
+      <li>I can’t remember much about my childhood. <input class="homework-input" data-answer="apparently" aria-label="Homework 1, sentence 3">, I spent most of the time running wild with the other kids in the village. That’s what my mum tells me, anyway.</li>
+      <li>Matt is such a lovely boy. But <input class="homework-input" data-answer="as to" aria-label="Homework 1, sentence 4"> what he wants to do in the future, he hasn’t got a clue.</li>
+      <li>We’ve had a great holiday, but, <input class="homework-input" data-answer="in a way|really" aria-label="Homework 1, sentence 5">, I’m glad to be going home. I’ve missed the cat!</li>
+      <li>That woman isn’t <input class="homework-input" data-answer="really" aria-label="Homework 1, sentence 6"> her mother; she’s her stepmother.</li>
+      <li>I’m hoping to move out soon. <input class="homework-input" data-answer="I mean|of course" aria-label="Homework 1, sentence 7">, I love my parents, but I’d like a place of my own.</li>
+      <li>I’m not going to apply for that job. It’s too far away and, <input class="homework-input" data-answer="anyway" aria-label="Homework 1, sentence 8">, the pay is too low.</li>
+    </ol>
+    <button class="check-btn" type="button" data-check="homework-fill" data-scope="homework-discourse" data-result="homework-discourse-result">Check Answers</button>
+    <div id="homework-discourse-result" class="result-msg"></div>
+    <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="homework-discourse-key">Show correct answers</button>
+    <div id="homework-discourse-key" class="reveal-panel" hidden><strong>Answers:</strong> 1 basically; 2 of course / I mean; 3 apparently; 4 as to; 5 in a way / really; 6 really; 7 I mean / of course; 8 anyway.</div>
+  </div>
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  <div class="card">
+    <h3>2. Vocabulary from the Interview</h3>
+    <p>Match the <strong>bold word or phrase</strong> in each sentence with the correct definition.</p>
+    <div id="homework-interview-vocab">
+      <div class="homework-mcq" data-answer="b">
+        <p><strong>1.</strong> My parents were <strong>instrumental</strong> in the beginning of the 60s folk revival.</p>
+        <div class="homework-options"><label><input type="radio" name="hw2-1" value="a"> a. busy playing in a lot of different bands</label><label><input type="radio" name="hw2-1" value="b"> b. important in making something happen</label></div>
+      </div>
+      <div class="homework-mcq" data-answer="a">
+        <p><strong>2.</strong> So you had a very musical <strong>upbringing</strong>?</p>
+        <div class="homework-options"><label><input type="radio" name="hw2-2" value="a"> a. the things you are taught by your parents when you are growing up</label><label><input type="radio" name="hw2-2" value="b"> b. the things you are taught at school</label></div>
+      </div>
+      <div class="homework-mcq" data-answer="b">
+        <p><strong>3.</strong> We grew up basically <strong>self-sufficient</strong>.</p>
+        <div class="homework-options"><label><input type="radio" name="hw2-3" value="a"> a. without any other people around</label><label><input type="radio" name="hw2-3" value="b"> b. without needing help from other people</label></div>
+      </div>
+      <div class="homework-mcq" data-answer="a">
+        <p><strong>4.</strong> My mum certainly didn’t want me to go <strong>on the road</strong>.</p>
+        <div class="homework-options"><label><input type="radio" name="hw2-4" value="a"> a. travel to different places to perform</label><label><input type="radio" name="hw2-4" value="b"> b. drive a long distance to a venue</label></div>
+      </div>
+      <div class="homework-mcq" data-answer="a">
+        <p><strong>5.</strong> Would you like your children to <strong>follow in your footsteps</strong>?</p>
+        <div class="homework-options"><label><input type="radio" name="hw2-5" value="a"> a. have the same lifestyle as you</label><label><input type="radio" name="hw2-5" value="b"> b. live in the same place as you</label></div>
+      </div>
+    </div>
+    <button class="check-btn" type="button" data-check="homework-mcq" data-scope="homework-interview-vocab" data-result="homework-interview-vocab-result">Check Answers</button>
+    <div id="homework-interview-vocab-result" class="result-msg"></div>
+    <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="homework-interview-vocab-key">Show correct answers</button>
+    <div id="homework-interview-vocab-key" class="reveal-panel" hidden><strong>Answers:</strong> 1 b; 2 a; 3 b; 4 a; 5 a.</div>
+  </div>
 
-function selectTF(btn, val) {
-  const row = btn.closest('.tf-row');
-  row.querySelectorAll('.tf-btn').forEach(b => {
-    b.classList.remove('selected-t', 'selected-f');
-  });
-  btn.classList.add(val === 'T' ? 'selected-t' : 'selected-f');
-  const corrInput = row.querySelector('.correction-input');
-  if (val === 'F') {
-    corrInput.classList.add('visible');
-  } else {
-    corrInput.classList.remove('visible');
-  }
-}
+  <div class="card">
+    <h3>3. Vocabulary from the Conversation</h3>
+    <p>Complete the sentences with a word or phrase from the list.</p>
+    <div class="conversation-photo">
+      <img src="Images/04_eliza.png" alt="Duncan, Joanne and Alice in conversation" loading="lazy">
+    </div>
+    <div class="word-bank" aria-label="Conversation vocabulary word bank">
+      <span>appreciate</span><span>buzzwords</span><span>cool about</span><span>exploit</span><span>lines can become blurred</span><span>ready-made job</span><span>spare bedroom</span><span>strike the right balance</span><span>warehouse</span><span>work-life balance</span>
+    </div>
+    <ol id="homework-conversation-vocab" class="homework-list">
+      <li>Conversations on the news and social media are full of <span class="homework-example">buzzwords</span>, which come and go with time.</li>
+      <li>One way of improving your <input class="homework-input" data-answer="work-life balance" aria-label="Homework 3, sentence 2"> is to go part-time.</li>
+      <li>My parents were always <input class="homework-input" data-answer="cool about" aria-label="Homework 3, sentence 3"> me staying out late, as long as I’d told them beforehand.</li>
+      <li>Working from home can be very lonely – it makes you <input class="homework-input" data-answer="appreciate" aria-label="Homework 3, sentence 4"> the importance of social contact.</li>
+      <li>Sadly, companies continue to <input class="homework-input" data-answer="exploit" aria-label="Homework 3, sentence 5"> their employees, with long working hours and low pay.</li>
+      <li>As a student, I always had a <input class="homework-input" data-answer="ready-made job" aria-label="Homework 3, sentence 6"> for the summer because my parents ran a hotel.</li>
+      <li>We’re able to invite friends and family to stay with us as we have a <input class="homework-input" data-answer="spare bedroom" aria-label="Homework 3, sentence 7"> that they can sleep in.</li>
+      <li>I’m afraid we can’t order any more of that item at the moment because it’s out of stock in the <input class="homework-input" data-answer="warehouse" aria-label="Homework 3, sentence 8">.</li>
+      <li>If you are the boss, be careful about making friends with employees as <input class="homework-input" data-answer="lines can become blurred" aria-label="Homework 3, sentence 9">.</li>
+      <li>It’s difficult for many companies to <input class="homework-input" data-answer="strike the right balance" aria-label="Homework 3, sentence 10"> between meeting the needs of customers and maintaining profitability.</li>
+    </ol>
+    <button class="check-btn" type="button" data-check="homework-fill" data-scope="homework-conversation-vocab" data-result="homework-conversation-vocab-result">Check Answers</button>
+    <div id="homework-conversation-vocab-result" class="result-msg"></div>
+    <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="homework-conversation-vocab-key">Show correct answers</button>
+    <div id="homework-conversation-vocab-key" class="reveal-panel" hidden><strong>Answers:</strong> 1 buzzwords; 2 work-life balance; 3 cool about; 4 appreciate; 5 exploit; 6 ready-made job; 7 spare bedroom; 8 warehouse; 9 lines can become blurred; 10 strike the right balance.</div>
+  </div>
 
-function renderResult(result, correct, total, successMessage, partialMessage, failMessage) {
-  result.classList.add('show');
-  if (correct === total) {
-    result.className = 'result-msg show success';
-    result.textContent = successMessage.replace('{correct}', correct).replace('{total}', total);
-  } else if (correct >= total / 2) {
-    result.className = 'result-msg show partial';
-    result.textContent = partialMessage.replace('{correct}', correct).replace('{total}', total);
-  } else {
-    result.className = 'result-msg show fail';
-    result.textContent = failMessage.replace('{correct}', correct).replace('{total}', total);
-  }
-}
+  <div class="card">
+    <h3>4. Can you remember…? Grammar &amp; Vocabulary</h3>
+    <h4 class="sub-heading">a) Complete the second sentence so that it means the same as the first sentence.</h4>
+    <p>Use the word in brackets. Write 3–5 words. Contractions count as one word.</p>
+    <ol id="homework-transformations" class="homework-list">
+      <li>Do we have to leave now? I’m enjoying myself! <strong>(got)</strong><br><input class="homework-input" data-answer="have we got to leave" aria-label="Transformation 1"> now? I’m enjoying myself!</li>
+      <li>Some builders repaired our roof last year. <strong>(had)</strong><br>We <input class="homework-input" data-answer="had our roof repaired" aria-label="Transformation 2"> last year.</li>
+      <li>Owen started working freelance ten years ago. <strong>(has)</strong><br>Owen <input class="homework-input" data-answer="has been working freelance" aria-label="Transformation 3"> for ten years.</li>
+      <li>Marta is the most conscientious person I know. <strong>(never)</strong><br>I <input class="homework-input" data-answer="have never known|'ve never known" aria-label="Transformation 4"> anyone as conscientious as Marta.</li>
+      <li>You must be joking! There’s no way you paid £500 for that suit. <strong>(having)</strong><br>You’re <input class="homework-input" data-answer="having me on" aria-label="Transformation 5">! There’s no way you paid £500 for that suit.</li>
+      <li>The company is closing because of bad management. <strong>(due)</strong><br>The company is closing <input class="homework-input" data-answer="due to bad management" aria-label="Transformation 6">.</li>
+      <li>Lucy is applying for a better job so as to move up the career ladder. <strong>(order)</strong><br>Lucy is applying for a better job <input class="homework-input" data-answer="in order to move up" aria-label="Transformation 7"> the career ladder.</li>
+      <li>I’m going to stay late tonight because my boss might need me to do something. <strong>(case)</strong><br>I’m going to stay late tonight <input class="homework-input" data-answer="in case my boss needs" aria-label="Transformation 8"> me to do something.</li>
+      <li>Amy was offered the job although she hasn’t got much experience. <strong>(despite)</strong><br>Amy was offered the job <input class="homework-input" data-answer="despite not having" aria-label="Transformation 9"> much experience.</li>
+      <li>Zach is far too spontaneous for me. I’ve had enough of him. <strong>(it)</strong><br>I <input class="homework-input" data-answer="have had it with|'ve had it with" aria-label="Transformation 10"> Zach. He’s far too spontaneous for me.</li>
+    </ol>
+    <button class="check-btn" type="button" data-check="homework-fill" data-scope="homework-transformations" data-result="homework-transformations-result">Check Answers</button>
+    <div id="homework-transformations-result" class="result-msg"></div>
+    <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="homework-transformations-key">Show correct answers</button>
+    <div id="homework-transformations-key" class="reveal-panel" hidden>
+      <ol><li>Have we got to leave</li><li>had our roof repaired</li><li>has been working freelance</li><li>’ve never known</li><li>having me on</li><li>due to bad management</li><li>in order to move up</li><li>in case my boss needs</li><li>despite not having</li><li>’ve had it with</li></ol>
+    </div>
 
-function checkTF() {
-  const rows = document.querySelectorAll('#tf-exercises .tf-row');
-  let correct = 0;
-  let total = rows.length;
-  rows.forEach(row => {
-    const correctAnswer = row.dataset.correct;
-    const selected = row.querySelector('.tf-btn.selected-t, .tf-btn.selected-f');
-    const buttons = row.querySelectorAll('.tf-btn');
-    buttons.forEach(b => b.classList.remove('correct-answer', 'wrong-answer'));
+    <h4 class="sub-heading">b) Read the article. Choose a, b, or c.</h4>
+    <div class="article-exercise">
+      <h4>The advantages of parallel careers</h4>
+      <p>Not everyone is lucky enough to have a <strong>1</strong> ___ job that not only makes them happy, but also earns them enough money to finance a comfortable lifestyle. The more <strong>2</strong> ___ of those who do not enjoy this privilege have come up with a solution to their problem: <strong>3</strong> ___ parallel careers. Working in a second job gives you higher earnings, and <strong>4</strong> ___ it can also help you become <strong>5</strong> ___: you no longer have to depend on parents or expensive bank loans if you need some extra cash. On top of that, pursuing a second career offers greater security: if you’re <strong>6</strong> ___ redundant, you still have some money to live on until you find a new job. If you long to teach t’ai chi or be a film reviewer, <strong>7</strong> ___ your dream won’t pay the rent, parallel careers may be the answer. You can keep the <strong>8</strong> ___ job that drives you mad with boredom from 9 to 5 and follow your passion at weekends and in the evenings. <strong>9</strong> ___, you’ll be making better use of your spare time, and you’ll be meeting new people and having new experiences at the same time. If you’ve never considered taking on another job, why not have <strong>10</strong> ___? It may bring about the change that you’ve been waiting for!</p>
+    </div>
+    <div id="homework-parallel-careers">
+      <div class="homework-mcq" data-answer="c"><p><strong>1.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-1" value="a"> a. demanding</label><label><input type="radio" name="hw4-1" value="b"> b. repetitive</label><label><input type="radio" name="hw4-1" value="c"> c. rewarding</label></div></div>
+      <div class="homework-mcq" data-answer="a"><p><strong>2.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-2" value="a"> a. resourceful</label><label><input type="radio" name="hw4-2" value="b"> b. steady</label><label><input type="radio" name="hw4-2" value="c"> c. thorough</label></div></div>
+      <div class="homework-mcq" data-answer="b"><p><strong>3.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-3" value="a"> a. having got</label><label><input type="radio" name="hw4-3" value="b"> b. having</label><label><input type="radio" name="hw4-3" value="c"> c. have got</label></div></div>
+      <div class="homework-mcq" data-answer="c"><p><strong>4.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-4" value="a"> a. although</label><label><input type="radio" name="hw4-4" value="b"> b. despite</label><label><input type="radio" name="hw4-4" value="c"> c. therefore</label></div></div>
+      <div class="homework-mcq" data-answer="b"><p><strong>5.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-5" value="a"> a. conscientious</label><label><input type="radio" name="hw4-5" value="b"> b. self-sufficient</label><label><input type="radio" name="hw4-5" value="c"> c. sympathetic</label></div></div>
+      <div class="homework-mcq" data-answer="c"><p><strong>6.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-6" value="a"> a. got</label><label><input type="radio" name="hw4-6" value="b"> b. had</label><label><input type="radio" name="hw4-6" value="c"> c. made</label></div></div>
+      <div class="homework-mcq" data-answer="c"><p><strong>7.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-7" value="a"> a. despite</label><label><input type="radio" name="hw4-7" value="b"> b. so</label><label><input type="radio" name="hw4-7" value="c"> c. yet</label></div></div>
+      <div class="homework-mcq" data-answer="b"><p><strong>8.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-8" value="a"> a. challenging</label><label><input type="radio" name="hw4-8" value="b"> b. monotonous</label><label><input type="radio" name="hw4-8" value="c"> c. motivating</label></div></div>
+      <div class="homework-mcq" data-answer="a"><p><strong>9.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-9" value="a"> a. As a result</label><label><input type="radio" name="hw4-9" value="b"> b. Nevertheless</label><label><input type="radio" name="hw4-9" value="c"> c. Since</label></div></div>
+      <div class="homework-mcq" data-answer="a"><p><strong>10.</strong></p><div class="homework-options"><label><input type="radio" name="hw4-10" value="a"> a. a go</label><label><input type="radio" name="hw4-10" value="b"> b. it in you</label><label><input type="radio" name="hw4-10" value="c"> c. me on</label></div></div>
+    </div>
+    <button class="check-btn" type="button" data-check="homework-mcq" data-scope="homework-parallel-careers" data-result="homework-parallel-careers-result">Check Answers</button>
+    <div id="homework-parallel-careers-result" class="result-msg"></div>
+    <button class="reveal-btn" type="button" aria-expanded="false" aria-controls="homework-parallel-careers-key">Show correct answers</button>
+    <div id="homework-parallel-careers-key" class="reveal-panel" hidden><strong>Answers:</strong> 1 c; 2 a; 3 b; 4 c; 5 b; 6 c; 7 c; 8 b; 9 a; 10 a.</div>
+  </div>
+</div>
 
-    if (selected) {
-      const isT = selected.classList.contains('selected-t');
-      const selectedVal = isT ? 'T' : 'F';
-      if (selectedVal === correctAnswer) {
-        correct++;
-        selected.classList.add('correct-answer');
-      } else {
-        selected.classList.add('wrong-answer');
-      }
-    }
-  });
-
-  renderResult(
-    document.getElementById('tf-result'),
-    correct,
-    total,
-    '✅ Perfect! {correct}/{total} correct!',
-    '⚠️ {correct}/{total} correct. Review the false statements and try again.',
-    '❌ {correct}/{total} correct. Watch the video again and retry.'
-  );
-}
-
-function checkFillBlanks() {
-  const blanks = document.querySelectorAll('#language .fill-blank');
-  let correct = 0;
-  let total = blanks.length;
-  blanks.forEach(blank => {
-    blank.classList.remove('correct', 'incorrect');
-    const answer = blank.dataset.answer.toLowerCase().trim();
-    const userAnswer = blank.value.toLowerCase().trim();
-    if (userAnswer === answer) {
-      blank.classList.add('correct');
-      correct++;
-    } else if (userAnswer !== '') {
-      blank.classList.add('incorrect');
-    }
-  });
-
-  renderResult(
-    document.getElementById('fill-result'),
-    correct,
-    total,
-    '✅ Perfect! {correct}/{total} correct!',
-    '⚠️ {correct}/{total} correct. Some answers need revision.',
-    '❌ {correct}/{total} correct. Watch the extracts again.'
-  );
-}
-
-function checkConvFill() {
-  const blanks = document.querySelectorAll('#conversation .conversation-box .fill-blank');
-  let correct = 0;
-  let total = blanks.length;
-  blanks.forEach(blank => {
-    blank.classList.remove('correct', 'incorrect');
-    const answer = blank.dataset.answer.toLowerCase().trim();
-    const userAnswer = blank.value.toLowerCase().trim();
-    if (userAnswer === answer) {
-      blank.classList.add('correct');
-      correct++;
-    } else if (userAnswer !== '') {
-      blank.classList.add('incorrect');
-    }
-  });
-
-  renderResult(
-    document.getElementById('conv-fill-result'),
-    correct,
-    total,
-    '✅ Perfect! {correct}/{total} correct!',
-    '⚠️ {correct}/{total} correct. Watch the extract again.',
-    '❌ {correct}/{total} correct. Try watching the conversation again.'
-  );
-}
-
-function toggleWho(btn) {
-  btn.classList.toggle('selected');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('button').forEach(button => {
-    button.type = 'button';
-    button.onclick = null;
-  });
-
-  document.querySelectorAll('.tab-btn').forEach(button => {
-    button.addEventListener('click', () => showTab(button.dataset.tab, button));
-  });
-
-  document.querySelectorAll('.tf-btn').forEach(button => {
-    button.addEventListener('click', () => selectTF(button, button.textContent.trim()));
-  });
-
-  document.querySelectorAll('.who-btn').forEach(button => {
-    button.addEventListener('click', () => toggleWho(button));
-  });
-
-  document.querySelectorAll('.check-btn').forEach(button => {
-    const action = button.dataset.check;
-    button.addEventListener('click', () => {
-      if (action === 'tf') checkTF();
-      if (action === 'fill') checkFillBlanks();
-      if (action === 'conv') checkConvFill();
-    });
-  });
-
-  document.querySelectorAll('.tab-content').forEach(tab => {
-    tab.setAttribute('role', 'tabpanel');
-    const tabId = tab.id + '-tab';
-    const correspondingButton = document.getElementById(tabId);
-    if (correspondingButton) {
-      tab.setAttribute('aria-labelledby', tabId);
-    }
-  });
-
-  document.querySelectorAll('.result-msg').forEach(message => {
-    message.setAttribute('aria-live', 'polite');
-  });
-
-  document.querySelectorAll('textarea, .fill-blank').forEach(field => {
-    if (!field.getAttribute('aria-label')) {
-      field.setAttribute('aria-label', field.placeholder || 'Response field');
-    }
-  });
-});
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
